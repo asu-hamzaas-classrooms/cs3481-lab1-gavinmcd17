@@ -1,6 +1,7 @@
 #include <cstdint>
 #include <cstdlib>
 #include <string>
+#include <iostream>
 #include "Tools.h"
 
 /*
@@ -241,7 +242,10 @@ uint64_t Tools::copyBits(uint64_t source, uint64_t dest,
  */
 uint64_t Tools::setByte(uint64_t source, int32_t byteNum)
 {
-  return 0;
+  uint64_t mask = uint64_t(0xff) << (byteNum * 8);
+  uint64_t inRange = ((byteNum < 8) & (byteNum > -1)) * 0xff;
+  mask &= inRange << (byteNum * 8);
+  return mask | source;
 }
 
 
@@ -322,6 +326,6 @@ bool Tools::subOverflow(uint64_t op1, uint64_t op2)
   //Note: you can not simply use addOverflow in this function.  If you negate
   //op1 in order to an add, you may get an overflow. 
   //NOTE: the subtraction is op2 - op1 (not op1 - op2).
-
-  return 0;
+  uint64_t result = op2 - op1;
+  return ((op1 ^ op2) & (op2 ^ result)) >> 63;
 }
