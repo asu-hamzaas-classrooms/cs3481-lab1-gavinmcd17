@@ -1,7 +1,6 @@
 #include <cstdint>
 #include <cstdlib>
 #include <string>
-#include <iostream>
 #include "Tools.h"
 
 /*
@@ -42,8 +41,7 @@
  *   1) no more than ten lines of code
  *   2) use a loop
 */
-uint64_t Tools::buildLong(uint8_t bytes[LONGSIZE])
-{
+uint64_t Tools::buildLong(uint8_t bytes[LONGSIZE]) {
   uint64_t myLong;
 
   for (int i = LONGSIZE - 1; i >= 0; i--) {
@@ -74,8 +72,7 @@ uint64_t Tools::buildLong(uint8_t bytes[LONGSIZE])
  * 1) you can use an if to handle error checking on input
  * 2) no loops or conditionals (other than for 1) or switch
 */
-uint64_t Tools::getByte(uint64_t source, int32_t byteNum)
-{
+uint64_t Tools::getByte(uint64_t source, int32_t byteNum) {
   if (byteNum < 0 || byteNum > 7) {
     return 0x00;
   }
@@ -110,8 +107,7 @@ uint64_t Tools::getByte(uint64_t source, int32_t byteNum)
  * 1) you can use an if to handle error checking on input
  * 2) no loops or conditionals (other than for 1) or switch
  */
-uint64_t Tools::getBits(uint64_t source, int32_t low, int32_t high)
-{
+uint64_t Tools::getBits(uint64_t source, int32_t low, int32_t high) {
   if (low < 0 || high > 63 || low > high) { // check for out of bounds or a greater low than high
     return 0x0;
   } else if (high - low + 1 == 64) { // if selecting all bits just return source (its the same)
@@ -145,8 +141,7 @@ uint64_t Tools::getBits(uint64_t source, int32_t low, int32_t high)
  * 2) no loops or conditionals (other than for 1) or switch
  * 3) you can use other functions you have written, for example, getBits
  */
-uint64_t Tools::setBits(uint64_t source, int32_t low, int32_t high)
-{
+uint64_t Tools::setBits(uint64_t source, int32_t low, int32_t high) {
   if (low < 0 || high > 63 || low > high) { // if out of range, return source
     return source;
   } else if (high - low + 1 == 64) { // if selecting all bits, return all 1s
@@ -177,8 +172,7 @@ uint64_t Tools::setBits(uint64_t source, int32_t low, int32_t high)
  * 2) no loops or conditionals (other than for 1) or switch
  * 3) you can use other functions you have written, for example, getBits
  */
-uint64_t Tools::clearBits(uint64_t source, int32_t low, int32_t high)
-{
+uint64_t Tools::clearBits(uint64_t source, int32_t low, int32_t high) {
   if (low < 0 || high > 63 || low > high) { // if out of range, return source
     return source;
   } else if (high - low + 1 == 64) { // if selecting all bits just return source (its the same)
@@ -215,8 +209,7 @@ uint64_t Tools::clearBits(uint64_t source, int32_t low, int32_t high)
  *               the low and high values are valid. 
  */
 uint64_t Tools::copyBits(uint64_t source, uint64_t dest, 
-                         int32_t srclow, int32_t dstlow, int32_t length)
-{
+                         int32_t srclow, int32_t dstlow, int32_t length) {
    return 0; 
 }
 
@@ -240,8 +233,7 @@ uint64_t Tools::copyBits(uint64_t source, uint64_t dest,
  *               code to return source if bytenum is out of range and
  *               the source otherwise.
  */
-uint64_t Tools::setByte(uint64_t source, int32_t byteNum)
-{
+uint64_t Tools::setByte(uint64_t source, int32_t byteNum) {
   uint64_t mask = uint64_t(0xff) << (byteNum * 8);
   uint64_t inRange = ((byteNum < 8) & (byteNum > -1)) * 0xff;
   mask &= inRange << (byteNum * 8);
@@ -265,8 +257,7 @@ uint64_t Tools::setByte(uint64_t source, int32_t byteNum)
  * 1) no loops or conditionals
  * 2) you can use other functions you have written, for example, getBits
  */
-uint64_t Tools::sign(uint64_t source)
-{
+uint64_t Tools::sign(uint64_t source) {
   return source >> 63;
 }
 
@@ -289,14 +280,7 @@ uint64_t Tools::sign(uint64_t source)
  * 2) you can use other functions you have written, for example, sign
  * 3) no more than 10 lines of code
  */
-bool Tools::addOverflow(uint64_t op1, uint64_t op2)
-{
-  //Hint: If an overflow occurs then it overflows by just one bit.
-  //      In other words, 65 bits would be needed to store the arithmetic 
-  //      result instead of 64 and the sign bit in the stored result (bit 63) is incorrect. 
-  //      Thus, the way to check for an overflow is to compare the signs of the
-  //      operand and the result.  For example, if you add two positive numbers, 
-  //      the result should be positive, otherwise an overflow occurred.
+bool Tools::addOverflow(uint64_t op1, uint64_t op2) {
   return sign(op1 + op2) != sign(op1);
 }
 
@@ -320,12 +304,7 @@ bool Tools::addOverflow(uint64_t op1, uint64_t op2)
  * 3) you cannot use addOverflow (it doesn't work in all cases).
  * 4) no more than 10 lines of code
  */
-bool Tools::subOverflow(uint64_t op1, uint64_t op2)
-{
-  //See hint for addOverflow
-  //Note: you can not simply use addOverflow in this function.  If you negate
-  //op1 in order to an add, you may get an overflow. 
-  //NOTE: the subtraction is op2 - op1 (not op1 - op2).
+bool Tools::subOverflow(uint64_t op1, uint64_t op2) {
   uint64_t result = op2 - op1;
   return ((op1 ^ op2) & (op2 ^ result)) >> 63;
 }
