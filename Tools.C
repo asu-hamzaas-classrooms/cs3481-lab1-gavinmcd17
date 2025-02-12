@@ -180,7 +180,7 @@ uint64_t Tools::clearBits(uint64_t source, int32_t low, int32_t high) {
   }
 
   uint64_t mask = ((uint64_t(1) << (high - low + 1)) - 1) << low; // create mask, shift by low
-  return source & ~mask; // apply mask and return
+  return source & ~mask; // apply inverted mask and return
 }
 
 
@@ -208,9 +208,20 @@ uint64_t Tools::clearBits(uint64_t source, int32_t low, int32_t high) {
  * RESTRICTIONS: You can only use an if statement to determine whether
  *               the low and high values are valid. 
  */
-uint64_t Tools::copyBits(uint64_t source, uint64_t dest, 
-                         int32_t srclow, int32_t dstlow, int32_t length) {
-   return 0; 
+uint64_t Tools::copyBits(uint64_t source, uint64_t dest, int32_t srclow, int32_t dstlow, int32_t length) {
+    if (srclow < 0 || dstlow < 0 || srclow + length > 64 || dstlow + length > 64) {
+        return dest;
+    }
+
+    uint64_t mask = ((uint64_t(1) << length) - 1) << srclow;
+
+    uint64_t sourceBits = (source & mask) >> srclow << dstlow;
+
+    dest &= ~(((uint64_t(1) << length) - 1) << dstlow);
+
+    dest |= sourceBits;
+
+    return dest;
 }
 
 
